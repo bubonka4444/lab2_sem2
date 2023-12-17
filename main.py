@@ -1,63 +1,25 @@
 import numpy as np
-import random
+from numpy import linalg
 
+matrix = int(input('Введите размерность квадратной матрицы больше 1 и меньше 20:'))
+while (matrix < 1) or (matrix > 20):
+    matrix = int(input("Введите указанные числа"))
+size = np.random.randint(5, size=(matrix, matrix))
+print("Матрица:\n", size)
 
-def factorial(n, oldfact):
-    if oldfact != 1:
-        fact = oldfact * (2 * n) * (2 * n - 1)
-    else:
-        return 1
-    return fact
-
-
-def algorithm(n, X, oldfact):
-    fact = 2 * n
-    currentfact = factorial(fact, oldfact)
-    det = np.linalg.det(np.linalg.matrix_power(X, (2 * n)))
-    result = det / factorial(n, fact) * (-1) ** n
-    return result, currentfact
-
-
-try:
-    while True:
-        K = int(input("Введите размер матрицы от 3 до 50 "))
-        if K >= 3 and K <= 50:
-            break
-        else:
-            print("Ваше число не входит в данный диапазон")
-
-    while True:
-        t = int(input("Введите количество знаков после запятой от 1 до 20 включительно "))
-        if t >= 1 and t <= 20:
-            break
-        else:
-            print("Ваше число не входит в данный диапазон")
-
-    X = [[0] * K for i in range(K)]  # создание матрицы X
-    for i in range(K):
-        for j in range(K):
-            X[i][j] = random.randint(-9, 9)
-
-    X = np.array(X)
-
-    X = X / 10
-
-    print(X)
-
-    summa = 0
-    n = 1
-    summastr = ""
-    oldfact = 1
-    tempsumma = 0
-    fraction = 0
-    while True:
-        tempsumma, oldfact = algorithm(n, X, oldfact)
-        summa += tempsumma
-        n += 1
-        print("Промежуточный результат №", n - 1, ' / ', summa, " ", tempsumma)
-        if abs(tempsumma) < (10 ** (-t)):
-            print("Конечный результат:    ", summa)
-            break
-
-except:
-    print("Произошла ошибка")
+sign = int(input('Кол-во знаков после запятой:'))
+sign = 0.1 ** sign
+n = 1
+factorial = 1
+summ = 0
+fg = 0
+out = 1
+while abs(out) > sign:
+    fg += summ
+    summ += np.linalg.det(linalg.matrix_power(size, 2 * n)) / factorial
+    n += 1
+    factorial *= (2*n -1) * (2*n)
+    out = abs(fg-summ)
+    fg = 0
+    print(n-1, ':', summ, ' ', out)
+print('Сумма знакопеременного ряда:', summ)
